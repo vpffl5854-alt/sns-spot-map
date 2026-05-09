@@ -93,19 +93,19 @@
             </label>
           </div>
 
-          <label>
-            업종
-            <select id="categoryInput" name="category">
-              <option value="korean">한식</option>
-              <option value="chinese">중식</option>
-              <option value="japanese">일식</option>
-              <option value="western">양식</option>
-              <option value="cafe">카페</option>
-              <option value="bakery">빵</option>
-              <option value="bar">술집</option>
-              <option value="other">기타</option>
-            </select>
-          </label>
+          <fieldset class="category-field">
+            <legend>업종</legend>
+            <div class="category-options">
+              <label><input type="checkbox" name="categoryOption" value="korean" />한식</label>
+              <label><input type="checkbox" name="categoryOption" value="chinese" />중식</label>
+              <label><input type="checkbox" name="categoryOption" value="japanese" />일식</label>
+              <label><input type="checkbox" name="categoryOption" value="western" />양식</label>
+              <label><input type="checkbox" name="categoryOption" value="cafe" />카페</label>
+              <label><input type="checkbox" name="categoryOption" value="bakery" />빵</label>
+              <label><input type="checkbox" name="categoryOption" value="bar" />술집</label>
+            </div>
+            <input id="customCategoryInput" name="customCategory" type="text" placeholder="직접 입력: 예) 분식, 샤브샤브" />
+          </fieldset>
 
           <label>
             주소 또는 장소명
