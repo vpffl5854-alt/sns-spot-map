@@ -1,0 +1,117 @@
+[hidden] {
+  display: none !important;
+}
+
+.spot-list-panel {
+  position: fixed;
+  z-index: 9;
+  top: 154px;
+  right: 18px;
+  width: min(390px, calc(100vw - 36px));
+  max-height: calc(100vh - 190px);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(23, 32, 37, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.list-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.list-panel-header h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.spot-search-input {
+  min-height: 44px;
+}
+
+.spot-list {
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.spot-list-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.spot-list-item.active {
+  border-color: rgba(15, 138, 99, 0.55);
+  box-shadow: 0 0 0 3px rgba(15, 138, 99, 0.14);
+}
+
+.spot-list-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: white;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.spot-list-copy {
+  min-width: 0;
+}
+
+.spot-list-copy strong,
+.spot-list-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spot-list-copy strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.spot-list-copy small,
+.spot-list-distance {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.spot-list-distance {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .spot-list-panel {
+    top: auto;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: auto;
+    max-height: 70vh;
+    border-radius: 18px;
+  }
+}
