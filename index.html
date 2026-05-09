@@ -27,6 +27,7 @@
           </div>
           <div class="top-actions">
             <button id="installButton" class="install-button" type="button" hidden>설치</button>
+            <button id="openListButton" class="install-button" type="button">목록</button>
             <button id="openComposer" class="icon-button" type="button" aria-label="콘텐츠 추가">+</button>
           </div>
         </header>
@@ -58,6 +59,19 @@
         <p id="selectedSummary" class="summary"></p>
         <div id="relatedList" class="related-list"></div>
       </section>
+
+      <aside id="spotListPanel" class="spot-list-panel" aria-label="저장한 장소 목록" hidden>
+        <div class="list-panel-header">
+          <div>
+            <p class="eyebrow">내 저장 장소</p>
+            <h2>거리순 목록</h2>
+          </div>
+          <button id="closeListButton" class="ghost-button" type="button">닫기</button>
+        </div>
+        <input id="spotSearchInput" class="spot-search-input" type="search" placeholder="식당명, 주소, 업종 검색" />
+        <p id="spotListMeta" class="meta"></p>
+        <div id="spotList" class="spot-list"></div>
+      </aside>
 
       <dialog id="composer" class="composer">
         <form id="spotForm" method="dialog">
@@ -153,5 +167,6 @@
 
     <script src="./config.js"></script>
     <script src="./main.js"></script>
+    <script src="./list.js"></script>
   </body>
 </html>
