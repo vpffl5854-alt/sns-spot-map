@@ -6,12 +6,14 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-const CACHE_NAME = "sns-spot-map-v1";
+const CACHE_NAME = "sns-spot-map-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/styles.css",
-  "/app.js",
+  "/list.css",
+  "/main.js",
+  "/list.js",
   "/config.js",
   "/manifest.webmanifest",
   "/icon.svg"
