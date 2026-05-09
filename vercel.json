@@ -5,6 +5,8 @@
     { "src": "main.js", "use": "@vercel/static" },
     { "src": "config.js", "use": "@vercel/static" },
     { "src": "styles.css", "use": "@vercel/static" },
+    { "src": "list.css", "use": "@vercel/static" },
+    { "src": "list.js", "use": "@vercel/static" },
     { "src": "manifest.webmanifest", "use": "@vercel/static" },
     { "src": "sw.js", "use": "@vercel/static" },
     { "src": "icon.svg", "use": "@vercel/static" },
@@ -16,8 +18,10 @@
     { "src": "/sw.js", "dest": "/sw.js", "headers": { "Service-Worker-Allowed": "/" } },
     { "src": "/icon.svg", "dest": "/icon.svg" },
     { "src": "/styles.css", "dest": "/styles.css" },
+    { "src": "/list.css", "dest": "/list.css" },
     { "src": "/config.js", "dest": "/config.js" },
     { "src": "/main.js", "dest": "/main.js" },
+    { "src": "/list.js", "dest": "/list.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
