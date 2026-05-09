@@ -273,6 +273,9 @@ textarea {
 .fallback-pin.active {
   width: 44px;
   height: 44px;
+  z-index: 7;
+  border-width: 4px;
+  box-shadow: 0 0 0 7px rgba(15, 138, 99, 0.24), 0 18px 34px rgba(23, 32, 37, 0.36);
 }
 
 .pin-instagram,
@@ -307,6 +310,7 @@ textarea {
   background: #6a4fb3;
 }
 
+.cat-custom,
 .cat-other {
   background: #68757d;
 }
@@ -332,6 +336,14 @@ textarea {
 .kakao-category-marker {
   display: grid;
   place-items: center;
+}
+
+.kakao-category-marker.active {
+  width: 46px;
+  height: 46px;
+  border-width: 4px;
+  box-shadow: 0 0 0 8px rgba(15, 138, 99, 0.28), 0 18px 36px rgba(23, 32, 37, 0.4);
+  font-size: 15px;
 }
 
 .kakao-category-marker,
@@ -550,6 +562,47 @@ label {
   color: var(--muted);
   font-size: 13px;
   font-weight: 800;
+}
+
+.category-field {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.category-field legend {
+  padding: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.category-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  background: #f8faf9;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.category-options input {
+  width: 16px;
+  height: 16px;
 }
 
 input,
