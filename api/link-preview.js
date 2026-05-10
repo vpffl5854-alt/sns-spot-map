@@ -2,6 +2,21 @@ function cleanText(value = "") {
   return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function isBlockedPreviewText(value = "") {
+  return [
+    /create an account or log in to instagram/i,
+    /share what you're into with the people/i,
+    /log in to instagram/i,
+    /sign up to see photos and videos/i
+  ].some((pattern) => pattern.test(String(value)));
+}
+
+function safePreviewText(value = "") {
+  const text = cleanText(value);
+  if (!text || isBlockedPreviewText(text)) return "";
+  return text;
+}
+
 function decodeEntities(value = "") {
   return value
     .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
@@ -72,9 +87,10 @@ function extractHours(value = "") { return cleanText(value.match(/\d{1,2}:\d{2}\
 function extractMenu(value = "") { return cleanText(value.match(/메뉴\s+(.+?)(?:가게명|상호|매장명|대구|서울|부산|인천|광주|대전|울산|세종|제주|☎|#|$)/)?.[1] || "").slice(0, 120); }
 
 function summarizeCaption(caption = "", businessName = "", address = "") {
+  if (isBlockedPreviewText(caption)) return "";
   const structured = [businessName && `가게명: ${businessName}`, address && `주소: ${address}`, extractMenu(caption) && `메뉴: ${extractMenu(caption)}`, extractHours(caption) && `영업시간: ${extractHours(caption)}`, extractPhone(caption) && `전화: ${extractPhone(caption)}`].filter(Boolean);
   if (structured.length >= 2) return structured.join("\n");
-  return caption.replace(/\s*#\S+/g, "").replace(/\s*☎️?\s*\d{2,4}-\d{3,4}-\d{4}/g, "").replace(/\s+/g, " ").trim().slice(0, 260);
+  return safePreviewText(caption.replace(/\s*#\S+/g, "").replace(/\s*☎️?\s*\d{2,4}-\d{3,4}-\d{4}/g, "").replace(/\s+/g, " ").trim()).slice(0, 260);
 }
 
 function extractPlaceCandidates(caption = "", fallbackUrl = "") {
@@ -96,7 +112,9 @@ function extractPreview(url, html) {
   const caption = type === "instagram" ? extractCaption(rawSummary || rawTitle) : rawSummary;
   const businessName = extractBusinessName(caption);
   const addressCandidate = extractKoreanAddress(caption);
-  return { url, title: businessName || (type === "instagram" ? extractCaption(rawTitle).slice(0, 36) : rawTitle), summary: type === "instagram" ? summarizeCaption(caption, businessName, addressCandidate) : rawSummary, businessName, addressCandidate, placeCandidates: extractPlaceCandidates(caption, url), image: pickMeta(html, "og:image"), type };
+  const title = businessName || safePreviewText(type === "instagram" ? extractCaption(rawTitle).slice(0, 36) : rawTitle);
+  const summary = type === "instagram" ? summarizeCaption(caption, businessName, addressCandidate) : safePreviewText(rawSummary);
+  return { url, title, summary, businessName, addressCandidate, placeCandidates: extractPlaceCandidates(caption, url), image: pickMeta(html, "og:image"), type };
 }
 
 export default async function handler(req, res) {
