@@ -194,9 +194,147 @@
 
         window.focusSpotOnMap = focusSpot;
 
+        function normalizedText(value = "") {
+          return String(value || "")
+            .toLowerCase()
+            .replace(/\s+/g, "")
+            .replace(/[()［］\[\]{}'"‘’“”·.,_-]/g, "");
+        }
+
+        function isSamePlace(a, b) {
+          if (!a || !b || a.id === b.id) return false;
+
+          const titleA = normalizedText(a.title);
+          const titleB = normalizedText(b.title);
+          const addressA = normalizedText(a.address);
+          const addressB = normalizedText(b.address);
+          const sameTitle = titleA && titleB && titleA === titleB;
+          const sameAddress = addressA && addressB && (addressA === addressB || addressA.includes(addressB) || addressB.includes(addressA));
+          const closeCoordinates = Math.abs(Number(a.lat) - Number(b.lat)) < 0.00025
+            && Math.abs(Number(a.lng) - Number(b.lng)) < 0.00025;
+
+          return sameAddress || (sameTitle && closeCoordinates);
+        }
+
+        function samePlaceGroup(a, b) {
+          return Boolean(a && b && (a.id === b.id || isSamePlace(a, b)));
+        }
+
+        function groupedSpotsForMap() {
+          if (typeof filteredSpots !== "function") return [];
+          const groups = [];
+
+          filteredSpots().forEach((spot) => {
+            const group = groups.find((items) => items.some((item) => samePlaceGroup(item, spot)));
+            if (group) {
+              group.push(spot);
+            } else {
+              groups.push([spot]);
+            }
+          });
+
+          return groups.map((group) => group.find((spot) => spot.id === activeSpotId) || group[0]);
+        }
+
+        if (typeof samePlace === "function") {
+          samePlace = isSamePlace;
+        }
+
+        if (typeof spotSearchText === "function") {
+          spotSearchText = (spot) => [
+            spot.title,
+            spot.address,
+            categoryText(spot.category),
+            String(spot.category || "").split(",").map((item) => item.trim()).includes("other") ? "기타" : "",
+            typeLabels[spot.type],
+            spot.summary
+          ].filter(Boolean).join(" ").toLowerCase();
+        }
+
+        if (typeof renderFallbackPins === "function") {
+          renderFallbackPins = () => {
+            const list = groupedSpotsForMap();
+            const fallbackPins = document.querySelector("#fallbackPins");
+            if (!fallbackPins) return;
+
+            fallbackPins.innerHTML = list.map((spot) => {
+              const x = Math.max(7, Math.min(93, ((spot.lng - 126.2) / 1.2) * 100));
+              const y = Math.max(8, Math.min(85, (1 - (spot.lat - 33.1) / 4.8) * 100));
+              return `
+                <button class="fallback-pin cat-${primaryCategory(spot)} ${spot.id === activeSpotId ? "active" : ""}"
+                  type="button"
+                  data-id="${spot.id}"
+                  style="left:${x}%; top:${y}%"
+                  aria-label="${spot.title}">
+                  <span>${categoryIcon(spot.category)}</span>
+                </button>
+              `;
+            }).join("");
+          };
+        }
+
+        if (typeof renderKakaoMarkers === "function") {
+          renderKakaoMarkers = () => {
+            if (!map || !window.kakao) return;
+
+            if (Array.isArray(markers)) {
+              markers.forEach((marker) => marker.setMap(null));
+              markers = [];
+            }
+
+            const list = groupedSpotsForMap();
+            const bounds = new kakao.maps.LatLngBounds();
+
+            list.forEach((spot) => {
+              const position = new kakao.maps.LatLng(spot.lat, spot.lng);
+              const marker = new kakao.maps.CustomOverlay({
+                map,
+                position,
+                yAnchor: 1,
+                content: `
+                  <button class="kakao-category-marker cat-${primaryCategory(spot)} ${spot.id === activeSpotId ? "active" : ""}" type="button" data-marker-id="${spot.id}" title="${spot.title}">
+                    ${categoryIcon(spot.category)}
+                  </button>
+                `
+              });
+              markers.push(marker);
+              bounds.extend(position);
+            });
+
+            if (markers.length > 1 && !activeSpotId) map.setBounds(bounds);
+            if (markers.length === 1 && !activeSpotId) map.setCenter(new kakao.maps.LatLng(list[0].lat, list[0].lng));
+          };
+        }
+
+        function toggleDetailSheet() {
+          const sheet = document.querySelector("#detailSheet");
+          const button = document.querySelector("#toggleDetailButton");
+          if (!sheet || !button) return;
+
+          const expanded = sheet.classList.toggle("expanded");
+          button.textContent = expanded ? "접기" : "더보기";
+        }
+
         document.addEventListener("click", (event) => {
+          if (event.target.closest("#toggleDetailButton, .sheet-handle")) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleDetailSheet();
+            return;
+          }
+
           const spotId = clickedSpotId(event);
           if (spotId) window.setTimeout(() => focusSpot(spotId), 0);
+        }, true);
+
+        document.addEventListener("submit", () => {
+          window.setTimeout(() => focusSpot(activeSpotId), 250);
+        }, true);
+
+        document.addEventListener("click", (event) => {
+          if (event.target.closest("#saveCandidatesButton")) {
+            window.setTimeout(() => focusSpot(activeSpotId), 500);
+          }
         });
       })();
     </script>
