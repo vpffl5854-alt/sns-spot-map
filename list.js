@@ -89,6 +89,7 @@
       spot.title,
       spot.address,
       categoryText(spot.category),
+      splitCategories(spot.category).includes("other") ? "기타" : "",
       typeNames[spot.type],
       spot.summary
     ].filter(Boolean).join(" ").toLowerCase();
@@ -168,10 +169,8 @@
     if (!item) return;
 
     selectSpot(item.dataset.listSpotId);
-    const spot = spots.find((entry) => entry.id === item.dataset.listSpotId);
-    if (spot && map && window.kakao) {
-      map.setCenter(new kakao.maps.LatLng(spot.lat, spot.lng));
-      map.setLevel(4);
+    if (typeof focusSpotOnMap === "function") {
+      focusSpotOnMap(item.dataset.listSpotId);
     }
     render();
   });
