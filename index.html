@@ -22,9 +22,9 @@
         </div>
 
         <header class="topbar">
-          <div>
+          <div class="brand-chip">
             <p class="eyebrow">SNS Spot Map</p>
-            <h1>링크를 장소에 붙이는 지도</h1>
+            <p class="spot-count-label">저장한 장소</p>
           </div>
           <div class="top-actions">
             <button id="installButton" class="install-button" type="button" hidden>설치</button>
@@ -249,6 +249,29 @@
             typeLabels[spot.type],
             spot.summary
           ].filter(Boolean).join(" ").toLowerCase();
+        }
+
+        function safeHtml(value = "") {
+          if (typeof escapeHtml === "function") return escapeHtml(value);
+          return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        if (typeof renderRelatedItem === "function") {
+          renderRelatedItem = (spot) => `
+            <a class="related-item related-link-item" href="${safeHtml(spot.url || "#")}" target="_blank" rel="noreferrer">
+              <span class="badge ${typeClass[spot.type] || ""}">${typeLabels[spot.type] || "SNS"}</span>
+              <span class="category-chip">${categoryText(spot.category)}</span>
+              <span class="related-link-copy">
+                <strong>${safeHtml(spot.title)}</strong>
+                <small>추가된 다른 링크 열기</small>
+              </span>
+            </a>
+          `;
         }
 
         if (typeof renderFallbackPins === "function") {
