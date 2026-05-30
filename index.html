@@ -52,9 +52,11 @@
             <p id="selectedType" class="eyebrow">선택된 장소</p>
             <h2 id="selectedTitle">성수 브루잉 라운지</h2>
           </div>
-          <a id="selectedLink" class="link-button" href="#" target="_blank" rel="noreferrer">원문</a>
-          <button id="editSpotButton" class="secondary-button" type="button">수정</button>
-          <button id="deleteSpotButton" class="danger-button" type="button">삭제</button>
+          <div class="sheet-actions" aria-label="장소 작업">
+            <a id="selectedLink" class="link-button" href="#" target="_blank" rel="noreferrer">원문</a>
+            <button id="editSpotButton" class="secondary-button" type="button">수정</button>
+            <button id="deleteSpotButton" class="danger-button" type="button">삭제</button>
+          </div>
         </div>
         <p id="selectedMeta" class="meta"></p>
         <p id="selectedSummary" class="summary"></p>
@@ -268,10 +270,29 @@
               <span class="category-chip">${categoryText(spot.category)}</span>
               <span class="related-link-copy">
                 <strong>${safeHtml(spot.title)}</strong>
-                <small>추가된 다른 링크 열기</small>
+                <small>추가된 링크 열기</small>
               </span>
             </a>
           `;
+        }
+
+        if (typeof selectSpot === "function") {
+          const originalSelectSpot = selectSpot;
+          selectSpot = (spotId) => {
+            originalSelectSpot(spotId);
+            if (typeof spots === "undefined" || !Array.isArray(spots) || !activeSpotId) return;
+
+            const selected = spots.find((spot) => spot.id === activeSpotId);
+            const relatedList = document.querySelector("#relatedList");
+            if (!selected || !relatedList) return;
+
+            const selectedTitle = normalizedText(selected.title);
+            const related = spots.filter((spot) => {
+              if (spot.id === selected.id || spot.url === selected.url) return false;
+              return isSamePlace(selected, spot) || (selectedTitle && selectedTitle === normalizedText(spot.title));
+            });
+            relatedList.innerHTML = related.length ? related.map(renderRelatedItem).join("") : "";
+          };
         }
 
         if (typeof renderFallbackPins === "function") {
