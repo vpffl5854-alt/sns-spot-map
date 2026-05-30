@@ -4,6 +4,10 @@
 
 .detail-sheet {
   max-height: 34vh !important;
+  padding: 12px 16px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 250, 0.92));
+  box-shadow: 0 18px 46px rgba(23, 32, 37, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 .detail-sheet.expanded {
@@ -26,6 +30,108 @@
 .detail-sheet .related-list,
 .detail-sheet.expanded .related-list {
   display: grid !important;
+}
+
+.sheet-header {
+  align-items: start;
+}
+
+.sheet-actions {
+  flex: 0 0 auto;
+  display: inline-grid;
+  grid-template-columns: repeat(3, auto);
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid rgba(15, 138, 99, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 22px rgba(23, 32, 37, 0.08);
+}
+
+.sheet-actions .link-button,
+.sheet-actions .secondary-button,
+.sheet-actions .danger-button {
+  min-width: 52px;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sheet-actions .secondary-button {
+  color: var(--green);
+}
+
+.sheet-actions .danger-button {
+  color: #a6362d;
+}
+
+.sheet-actions .link-button:hover,
+.sheet-actions .secondary-button:hover,
+.sheet-actions .danger-button:hover,
+.sheet-actions .link-button:focus-visible,
+.sheet-actions .secondary-button:focus-visible,
+.sheet-actions .danger-button:focus-visible {
+  background: rgba(15, 138, 99, 0.1);
+  outline: none;
+}
+
+.detail-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-color: rgba(15, 138, 99, 0.18);
+  color: var(--green);
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 900;
+}
+
+.related-list {
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.related-link-item {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  text-decoration: none;
+  border-color: rgba(15, 138, 99, 0.16);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 8px 20px rgba(23, 32, 37, 0.06);
+}
+
+.related-link-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.related-link-copy strong,
+.related-link-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.related-link-copy strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.related-link-copy small {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .spot-list-panel {
